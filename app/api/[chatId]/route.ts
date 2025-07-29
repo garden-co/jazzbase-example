@@ -1,6 +1,5 @@
 import { Chat, Message } from "@/app/schema";
 import { NextRequest } from "next/server";
-import { waitUntil } from "@vercel/functions";
 import { worker } from "../../worker";
 
 export async function POST(request: NextRequest, { params }: { params: { chatId: string } }) {
@@ -11,6 +10,8 @@ export async function POST(request: NextRequest, { params }: { params: { chatId:
 
   chat?.messages.push(Message.create({ text }));
 
+  // wait for sync before returning to ensure consistency in
+  // fetches right afterwards
   await worker.waitForAllCoValuesSync();
 
   return new Response("OK", { status: 200 });
