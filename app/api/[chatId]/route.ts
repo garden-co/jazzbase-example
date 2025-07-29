@@ -2,8 +2,8 @@ import { Chat, Message } from "@/app/schema";
 import { NextRequest } from "next/server";
 import { worker } from "../../worker";
 
-export async function POST(request: NextRequest, { params }: { params: { chatId: string } }) {
-  const { chatId } = params;
+export async function POST(request: NextRequest, { params }: { params: Promise<{ chatId: string }> }) {
+  const { chatId } = await params;
   const { text } = await request.json();
 
   const chat = await Chat.load(chatId, { resolve: { messages: { $each: true }}});
