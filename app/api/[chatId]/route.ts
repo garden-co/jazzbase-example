@@ -6,7 +6,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { chatId } = await params;
   const { text } = await request.json();
 
-  const chat = await Chat.load(chatId, { resolve: { messages: { $each: true }}});
+  const chat = await Chat.load(chatId, { resolve: { messages: true }});
 
   chat?.messages.push(Message.create({ text }));
 
